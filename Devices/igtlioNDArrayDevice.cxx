@@ -18,11 +18,9 @@ std::string igtlioNDArrayDeviceCreator::GetDeviceType() const
 //---------------------------------------------------------------------------
 vtkStandardNewMacro(igtlioNDArrayDeviceCreator);
 
-
-
-
 //---------------------------------------------------------------------------
 vtkStandardNewMacro(igtlioNDArrayDevice);
+
 //---------------------------------------------------------------------------
 igtlioNDArrayDevice::igtlioNDArrayDevice()
 {
@@ -39,7 +37,8 @@ std::string igtlioNDArrayDevice::GetDeviceType() const
   return igtlioNDArrayConverter::GetIGTLTypeName();
 }
 
-int igtlioNDArrayDevice::ReceiveIGTLMessage(igtl::NDArrayMessage::Pointer buffer, bool checkCRC)
+//---------------------------------------------------------------------------
+int igtlioNDArrayDevice::ReceiveIGTLMessage(igtl::MessageBase::Pointer buffer, bool checkCRC)
 {
   int success = igtlioNDArrayConverter::fromIGTL(buffer, &HeaderData, &Content, checkCRC, this->metaInfo);
   if (success)
@@ -56,19 +55,7 @@ unsigned int igtlioNDArrayDevice::GetDeviceContentModifiedEvent() const
 }
 
 //---------------------------------------------------------------------------
-int igtlioNDArrayDevice::ReceiveIGTLMessage(igtl::NDArrayMessage::Pointer buffer, bool checkCRC)
-{
-  int success = igtlioNDArrayConverter::fromIGTL(buffer, &HeaderData, &Content, checkCRC, this->metaInfo);
-  if (success)
-  {
-    this->Modified();
-    this->InvokeEvent(ArrayModifiedEvent, this);
-  }
-  return success;
-}
-
-//---------------------------------------------------------------------------
-igtl::NDArrayMessage::Pointer igtlioNDArrayDevice::GetIGTLMessage()
+igtl::MessageBase::Pointer igtlioNDArrayDevice::GetIGTLMessage()
 {
 
  if (!igtlioNDArrayConverter::toIGTL(HeaderData, Content, &this->OutMessage, this->metaInfo))
@@ -76,11 +63,11 @@ igtl::NDArrayMessage::Pointer igtlioNDArrayDevice::GetIGTLMessage()
    return 0;
    }
 
- return dynamic_pointer_cast<igtl::NDArrayMessage>(this->OutMessage);
+ return dynamic_pointer_cast<igtl::MessageBase>(this->OutMessage);
 }
 
 //---------------------------------------------------------------------------
-igtl::NDArrayMessage::Pointer igtlioNDArrayDevice::GetIGTLMessage(MESSAGE_PREFIX prefix)
+igtl::MessageBase::Pointer igtlioNDArrayDevice::GetIGTLMessage(MESSAGE_PREFIX prefix)
 {
  if (prefix==MESSAGE_PREFIX_NOT_DEFINED)
    {

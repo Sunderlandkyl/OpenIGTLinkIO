@@ -17,12 +17,12 @@ public:
     ArrayModifiedEvent         = 118960,
   };
 
- virtual unsigned int GetDeviceContentModifiedEvent() const;
- virtual std::string GetDeviceType() const;
- //virtual int ReceiveIGTLMessage(igtl::NDArrayMessage::Pointer buffer, bool checkCRC);
- virtual igtl::NDArrayMessage::Pointer GetIGTLMessage() const;
- virtual igtl::NDArrayMessage::Pointer GetIGTLMessage(MESSAGE_PREFIX prefix) const;
- virtual std::set<MESSAGE_PREFIX> GetSupportedMessagePrefixes();
+ unsigned int GetDeviceContentModifiedEvent() const;
+ std::string GetDeviceType() const;
+ int ReceiveIGTLMessage(igtl::MessageBase::Pointer buffer, bool checkCRC) override;
+ igtl::MessageBase::Pointer GetIGTLMessage() override;
+ igtl::MessageBase::Pointer GetIGTLMessage(MESSAGE_PREFIX prefix);
+ std::set<MESSAGE_PREFIX> GetSupportedMessagePrefixes() const override;
 
   void SetContent(igtlioNDArrayConverter::ContentData content);
   igtlioNDArrayConverter::ContentData GetContent();
@@ -50,7 +50,7 @@ class OPENIGTLINKIO_DEVICES_EXPORT igtlioNDArrayDeviceCreator : public igtlioDev
 {
 public:
   virtual igtlioDevicePointer Create(std::string device_name);
-  virtual std::string GetDeviceType();
+  std::string GetDeviceType() const override;
 
   static igtlioNDArrayDeviceCreator *New();
   vtkTypeMacro(igtlioNDArrayDeviceCreator,vtkObject);

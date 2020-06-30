@@ -14,9 +14,6 @@ int igtlioNDArrayConverter::fromIGTL(igtl::MessageBase::Pointer source,
     msg->Copy(source);
 
     int c = msg->Unpack(checkCRC);
-    
-
-    cbcbcpa
     if ((c & igtl::MessageHeader::UNPACK_BODY == 0))
         {
         return 0;
